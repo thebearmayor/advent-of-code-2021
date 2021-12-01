@@ -1,20 +1,9 @@
-f = open("input", "r")
+using IterTools
 
-measurements = map(readlines(f)) do line
-    parse(Int64, line)
-end
+f = open("input.txt", "r")
 
-left = 1
-
-prev = measurements[left] + measurements[left + 1] + measurements[left + 2]
-left += 1
-count = 0
-while left + 2 <= length(measurements)
-    curr = measurements[left] + measurements[left + 1] + measurements[left + 2]
-    if curr > prev
-        global count += 1
-    end
-    global left += 1
-    global prev = curr
-end
-println(count)
+measurements = map(line -> parse(Int64, line), readlines(f))
+sums = map(sum, partition(measurements, 3, 1))
+diffs = map(x -> x[2] - x[1], partition(sums, 2, 1))
+c = count(x -> x > 0, diffs)
+println(c)
