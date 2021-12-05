@@ -8,9 +8,10 @@ function step(n1, n2)
     else
         -1
     end
+end
 
 function part02(file = "day05/input.txt")
-    points = []
+    points = Dict{Tuple{Int64, Int64}, Int64}()
     for line in eachline(file)
         components = parse.(Int, split(line, r",| -> ", limit=4))
         x1, y1, x2, y2 = components[1], components[2], components[3], components[4]
@@ -18,7 +19,7 @@ function part02(file = "day05/input.txt")
         yStep = step(y1, y2)
         x, y = x1, y1
         while true
-            push!(points, (x, y))
+            points[x,y] = get(points, (x, y), 0) + 1
             if x == x2 && y == y2
                 break
             end
@@ -26,7 +27,7 @@ function part02(file = "day05/input.txt")
             y += yStep
         end
     end
-    res = count(v -> length(v) > 1, values(group(identity, points)))
+    res = count(>(1), values(points))
     println(res)
 end
             
